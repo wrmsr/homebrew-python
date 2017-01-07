@@ -18,12 +18,6 @@ class Python35 < Formula
     end
   end
 
-  bottle do
-    sha256 "4a43600ceb2875c13200ace82fea1a9a119973b831f5503fa57cf8db44fbb155" => :sierra
-    sha256 "301854e1a52fd577f84015eb5ef07e0e369c794b8894fb6850ae84d9391f740e" => :el_capitan
-    sha256 "075f5e63188dfcd5a13ef1f9658b26aa2d8d943fbc5c5c50e05fc973bc38f7c1" => :yosemite
-  end
-
   devel do
     url "https://www.python.org/ftp/python/3.6.0/Python-3.6.0rc2.tar.xz"
     sha256 "ed07453330af6677d0a670e187344922a67208fc6bdaea9fade66dc08bf763a4"
@@ -86,17 +80,6 @@ class Python35 < Formula
   # The HOMEBREW_PREFIX location of site-packages.
   def site_packages
     HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
-  end
-
-  # setuptools remembers the build flags python is built with and uses them to
-  # build packages later. Xcode-only systems need different flags.
-  pour_bottle? do
-    reason <<-EOS.undent
-    The bottle needs the Apple Command Line Tools to be installed.
-      You can install them, if desired, with:
-        xcode-select --install
-    EOS
-    satisfy { MacOS::CLT.installed? }
   end
 
   def install
@@ -294,6 +277,11 @@ class Python35 < Formula
       include_dirs=#{include_dirs.join ":"}
       library_dirs=#{library_dirs.join ":"}
     EOF
+
+    (HOMEBREW_PREFIX/"bin").install_symlink bin/"python3.5"
+    (HOMEBREW_PREFIX/"bin").install_symlink bin/"python3.5-config"
+    (HOMEBREW_PREFIX/"bin").install_symlink bin/"python3.5m"
+    (HOMEBREW_PREFIX/"bin").install_symlink bin/"python3.5m-config"
   end
 
   def xy
